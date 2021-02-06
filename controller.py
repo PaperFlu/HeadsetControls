@@ -20,7 +20,7 @@ LOG_FILE.flush()
 
 
 class HeadsetButtonController:
-    def process_frames(self, in_data):
+    def process_frames(self, in_data, frames, time, status):
         mean1 = sum([x[0] for x in in_data[:]]) / len(in_data[:])
         mean2 = sum([x[1] for x in in_data[:]]) / len(in_data[:])
 
