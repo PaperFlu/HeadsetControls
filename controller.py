@@ -31,20 +31,28 @@ class HeadsetButtonController:
 
         if self.is_pressing:
             diff_abs = abs(diff)
-            if diff_abs < RECOVER_THRESHOLD and deviation < RECOVER_DEVIATION:
+            press_duration = timeit.default_timer() - self.press_time
+
+            is_long_press = press_duration >= LONG_PRESS_SECONDS
+            is_recovered = diff_abs < RECOVER_THRESHOLD and deviation < RECOVER_DEVIATION
+
+            if is_recovered:
                 self.is_pressing = False
 
-                if self.largest_diff <= BUTTON_C_THRESHOLD:
-                    control_media_by_id('C')
-                elif self.largest_diff <= BUTTON_B_THRESHOLD:
-                    control_media_by_id('B')
-                elif self.largest_diff <= BUTTON_A_THRESHOLD:
-                    control_media_by_id('A')
-
-                LOG_FILE.write("%f %f %f\n" % (self.largest_diff, timeit.default_timer() - self.press_time, deviation))
+                LOG_FILE.write("%f %f %f\n" % (self.largest_diff, press_duration, deviation))
                 LOG_FILE.flush()
 
-            else:
+            if not self.fired:
+                if (is_long_press and not is_recovered) or (is_recovered and not is_long_press):
+                    self.fired = True
+
+                    if self.largest_diff <= BUTTON_C_THRESHOLD:
+                        control_media_by_id('C', is_long_press)
+                    elif self.largest_diff <= BUTTON_B_THRESHOLD:
+                        control_media_by_id('B', is_long_press)
+                    elif self.largest_diff <= BUTTON_A_THRESHOLD:
+                        control_media_by_id('A', is_long_press)
+
                 if self.largest_diff < diff:
                     self.largest_diff = diff
 
@@ -53,6 +61,7 @@ class HeadsetButtonController:
                 self.is_pressing = True
                 self.largest_diff = diff
                 self.press_time = timeit.default_timer()
+                self.fired = False
 
     def __init__(self):
         self.stream = sd.InputStream(
@@ -66,3 +75,4 @@ class HeadsetButtonController:
         self.is_pressing = False
         self.largest_diff = 0
         self.press_time = 0
+        self.fired = False
