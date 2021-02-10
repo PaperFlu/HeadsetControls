@@ -11,7 +11,7 @@ Original repository: [roligheten/AndroidMediaControlsWindows](https://github.com
 
 1. Download a copy of this repository from [here](https://github.com/PaperFlu/HeadsetControls/archive/master.zip).
 2. Extract to an appropriate location on your system, where doesn't matter as long as you don't accidentally delete it.
-3. Open cmd or PowerShell, navigate to the path where you have the 'run.py':
+3. Open cmd or PowerShell, navigate to the path where you have the `run.py`:
 
     ```
     python run.py
@@ -19,4 +19,3 @@ Original repository: [roligheten/AndroidMediaControlsWindows](https://github.com
 
 ## LICENSE
 [GPL-3.0 License](https://github.com/PaperFlu/HeadsetControls/blob/master/LICENSE)
-
